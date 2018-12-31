@@ -9,12 +9,13 @@
     "client": "webpack-dev-server --open --mode development --hot",
     "server": "nodemon --exec babel-node src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --require @babel/polyfill --require @babel/register"
   },
   "author": "Victor Domecq",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
+    "mysql": "^2.16.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "socket.io": "^2.2.0",
@@ -23,14 +24,17 @@
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/node": "^7.2.2",
+    "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.2",
+    "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^1.0.0",
     "concurrently": "^4.1.0",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.5.0",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.9",
     "style-loader": "^0.23.0",
     "webpack": "^4.19.1",
