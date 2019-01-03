@@ -3,14 +3,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const BUILD_DIR = path.resolve(__dirname, "build");
-const CLIENT_DIR = path.resolve(__dirname, "src/client");
-const PUBLIC_INDEX_DIR = path.resolve("","src/client/public/index.html");
-
 const cleanPlugin = new CleanWebpackPlugin(["build"]);
 
 const htmlPlugin = new HtmlWebpackPlugin({
-  template: PUBLIC_INDEX_DIR,
+  template: path.resolve(__dirname, "src/client/public/index.html"),
   filename: "index.html"
 });
 
@@ -20,9 +16,9 @@ const miniCssPlugin = new MiniCssExtractPlugin({
 });
 
 const config = {
-  entry: CLIENT_DIR + "/index.js",
+  entry: path.resolve(__dirname, "src/client/index.js"),
   output: {
-    path: BUILD_DIR,
+    path: path.resolve(__dirname, "build"),
     filename: "./js/bundle.js"
   },
   module: {
@@ -52,10 +48,7 @@ const config = {
   },
   devServer: {
     port: 3000,
-    open: true,
-    proxy: {
-      "/api": "http://localhost:8080"
-    }
+    open: true
   },
   plugins: [cleanPlugin, htmlPlugin, miniCssPlugin]
 };
