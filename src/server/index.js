@@ -1,7 +1,6 @@
 import server from "./server";
+import {appConfig} from "../../server.config";
 
-var PORT = 8080;
-
-server.listen(PORT, function() {
-  console.log(`Server launched successfully : listening on ${PORT}`);
+server.listen(appConfig.server.port, function() {
+  console.log("Server launched successfully : listening on "+ appConfig.server.port);
 });
