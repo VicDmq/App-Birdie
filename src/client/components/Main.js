@@ -2,10 +2,11 @@ import React from "react";
 import socketIOClient from "socket.io-client";
 import { connect } from "react-redux";
 import { actionCreators } from "../appRedux";
+import { formatResultBeforeStoring } from "../resultFormatting";
 import DropdownButton from "./DropdownButton";
 import Table from "./Table";
-import "../style/app.css";
 import ErrorComponent from "./ErrorComponent";
+import "../style/app.css";
 
 const mapStateToProps = state => ({
   datas: state.datas,
@@ -16,43 +17,64 @@ class Main extends React.Component {
   state = {
     socket: socketIOClient("http://localhost:8080"),
     options: ["Education", "Hispanice", "Mace"],
-    error: null
+    head: ["#", "", "Count", "Average Age"],
+    limit: 100,
+    error: null,
+    nbLinesNotDisplayed: null
   };
 
-  onDemographicDataTypeChanged = demographicDataType => {
-    this.state.socket.emit("Request", demographicDataType);
+  componentWillMount = () => {
+    const { socket, limit } = this.state;
 
-    const { dispatch } = this.props;
-    dispatch(actionCreators.updateDemographicDataType(demographicDataType));
+    socket.emit("Request", this.props.demographicDataType, limit);
+
+    socket.on("Response", (result, nbLinesNotDisplayed) => {
+      this.onDatasUpdated(result);
+
+      this.setState({ nbLinesNotDisplayed: nbLinesNotDisplayed });
+      this.setState({ error: null });
+    });
+
+    socket.on("Error", error => {
+      this.onErrorOccured(error);
+
+      this.setState({ nbLinesNotDisplayed: null });
+    });
   };
 
   onDatasUpdated = result => {
     const { dispatch } = this.props;
-    dispatch(actionCreators.updateDatas(result));
-    this.setState({ error: null });
+
+    const resultFormatted = formatResultBeforeStoring(result);
+    dispatch(actionCreators.updateDatas(resultFormatted));
   };
 
   onErrorOccured = error => {
     this.setState({ error });
   };
 
-  componentWillMount = () => {
-    const { socket } = this.state;
+  onDemographicDataTypeChanged = demographicDataType => {
+    const { socket, limit } = this.state;
+    socket.emit("Request", demographicDataType, limit);
 
-    socket.emit("Request", this.props.demographicDataType);
-    socket.on("Response", result => this.onDatasUpdated(result));
-    socket.on("Error", error => this.onErrorOccured(error));
+    const { dispatch } = this.props;
+    dispatch(actionCreators.updateDemographicDataType(demographicDataType));
   };
 
   render() {
-    const { error, options } = this.state;
+    const { options, head, error, nbLinesNotDisplayed } = this.state;
     const { datas, demographicDataType } = this.props;
+
+    let lineNotDisplayedComponent;
+    if (nbLinesNotDisplayed) {
+      lineNotDisplayedComponent = <div>{nbLinesNotDisplayed}</div>;
+    }
 
     let mainComponent;
     if (error) {
       mainComponent = <ErrorComponent message={error} />;
     } else {
-      const head = ["#", demographicDataType, "Count", "Average Age"];
+      head[1] = demographicDataType;
       mainComponent = <Table head={head} rows={datas} />;
     }
 
@@ -65,6 +87,7 @@ class Main extends React.Component {
             this.onDemographicDataTypeChanged(newDemographicDataType)
           }
         />
+        {lineNotDisplayedComponent}
         {mainComponent}
       </div>
     );

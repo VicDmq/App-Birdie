@@ -2,13 +2,17 @@ import express from "express";
 import { Server } from "http";
 import socket from "socket.io";
 import { queryDatabase } from "./database";
+import {
+  formatResultAccordingToLimit,
+  additionalLinesShouldBeGroupedTogether
+} from "./resultFormatting";
 
 const app = express();
 const server = Server(app);
 const io = socket(server);
 
 io.sockets.on("connection", function(socket) {
-  socket.on("Request", function(demographicDataType) {
+  socket.on("Request", function(demographicDataType, limit) {
     const query =
       "SELECT " +
       demographicDataType +
@@ -16,20 +20,32 @@ io.sockets.on("connection", function(socket) {
       demographicDataType +
       " ORDER BY COUNT(*) DESC";
 
-    const callback = function(error, results) {
-      sendResponseWithSocketIO(socket, error, results);
+    const callback = function(error, result) {
+      if (error) {
+        socket.emit("Error", error.message);
+      } else {
+        const shouldBeFormatted = additionalLinesShouldBeGroupedTogether(
+          result.length,
+          limit
+        );
+        const nbLinesNotDisplayed = shouldBeFormatted
+          ? result.length - limit + 1
+          : null;
+
+        if (shouldBeFormatted) {
+          result = formatResultAccordingToLimit(
+            demographicDataType,
+            result,
+            limit
+          );
+        }
+
+        socket.emit("Response", result, nbLinesNotDisplayed);
+      }
     };
 
     queryDatabase(query, callback);
   });
 });
-
-function sendResponseWithSocketIO(socket, error, results) {
-  if (error) {
-    socket.emit("Error", error.message);
-  } else {
-    socket.emit("Response", results);
-  }
-}
 
 module.exports = server;
