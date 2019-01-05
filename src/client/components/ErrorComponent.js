@@ -6,9 +6,7 @@ export default class ErrorComponent extends React.Component {
     const { message } = this.props;
 
     return (
-      <div className="not-found">
-        <h1>{message}</h1>
-      </div>
+      <div className="error-container">{"An error occured : " + message}</div>
     );
   }
 }

@@ -5,7 +5,7 @@ import Row from "./Row";
 export default class Table extends React.Component {
   render() {
     const { head, rows } = this.props;
-    
+
     return (
       <table>
         <thead>

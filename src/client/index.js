@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Main from "./components/Main";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-
-// Import the reducer and create a store
+import Main from "./components/Main";
 import { reducer } from "./appRedux";
+
 const store = createStore(reducer);
 
 ReactDOM.render(

@@ -6,6 +6,7 @@ import { formatResultBeforeStoring } from "../resultFormatting";
 import DropdownButton from "./DropdownButton";
 import Table from "./Table";
 import ErrorComponent from "./ErrorComponent";
+import Loader from "react-loader-spinner";
 import "../style/app.css";
 
 const mapStateToProps = state => ({
@@ -16,29 +17,45 @@ const mapStateToProps = state => ({
 class Main extends React.Component {
   state = {
     socket: socketIOClient("http://localhost:8080"),
-    options: ["Education", "Hispanice", "Mace"],
+    options: ["Education", "Hispanice", "Mace", "ooo"],
     head: ["#", "", "Count", "Average Age"],
-    limit: 100,
+    limit: 10,
     error: null,
-    nbLinesNotDisplayed: null
+    nbLinesNotDisplayed: null,
+    isLoading: true
   };
 
   componentWillMount = () => {
     const { socket, limit } = this.state;
+    const { demographicDataType } = this.props;
 
-    socket.emit("Request", this.props.demographicDataType, limit);
+    this.sendRequest(socket, demographicDataType, limit);
 
     socket.on("Response", (result, nbLinesNotDisplayed) => {
       this.onDatasUpdated(result);
 
-      this.setState({ nbLinesNotDisplayed: nbLinesNotDisplayed });
-      this.setState({ error: null });
+      this.updateStateAccordingToSocketAction(null, nbLinesNotDisplayed, false);
     });
 
     socket.on("Error", error => {
-      this.onErrorOccured(error);
+      this.updateStateAccordingToSocketAction(error, null, false);
+    });
+  };
 
-      this.setState({ nbLinesNotDisplayed: null });
+  sendRequest = (socket, demographicDataType, limit) => {
+    socket.emit("Request", demographicDataType, limit);
+    this.updateStateAccordingToSocketAction(null, null, true);
+  };
+
+  updateStateAccordingToSocketAction = (
+    error,
+    nbLinesNotDisplayed,
+    isLoading
+  ) => {
+    this.setState({
+      error: error,
+      nbLinesNotDisplayed: nbLinesNotDisplayed,
+      isLoading: isLoading
     });
   };
 
@@ -49,37 +66,46 @@ class Main extends React.Component {
     dispatch(actionCreators.updateDatas(resultFormatted));
   };
 
-  onErrorOccured = error => {
-    this.setState({ error });
-  };
-
   onDemographicDataTypeChanged = demographicDataType => {
     const { socket, limit } = this.state;
-    socket.emit("Request", demographicDataType, limit);
-
     const { dispatch } = this.props;
     dispatch(actionCreators.updateDemographicDataType(demographicDataType));
+
+    this.sendRequest(socket, demographicDataType, limit);
   };
 
   render() {
-    const { options, head, error, nbLinesNotDisplayed } = this.state;
+    const { options, head, error, nbLinesNotDisplayed, isLoading } = this.state;
     const { datas, demographicDataType } = this.props;
 
-    let lineNotDisplayedComponent;
-    if (nbLinesNotDisplayed) {
-      lineNotDisplayedComponent = <div>{nbLinesNotDisplayed}</div>;
-    }
+    const lineNotDisplayedComponent = (
+      <div class="lineNotDisplayed-container">
+        {nbLinesNotDisplayed
+          ? nbLinesNotDisplayed + " lines has not been displayed"
+          : ""}
+      </div>
+    );
 
     let mainComponent;
     if (error) {
-      mainComponent = <ErrorComponent message={error} />;
+      mainComponent = (
+        <div className="centered-container">
+          <ErrorComponent message={error} />
+        </div>
+      );
+    } else if (isLoading) {
+      mainComponent = (
+        <div className="centered-container">
+          <Loader type="Oval" width={80} height={80} color="#1919c7" />
+        </div>
+      );
     } else {
       head[1] = demographicDataType;
       mainComponent = <Table head={head} rows={datas} />;
     }
 
     return (
-      <div>
+      <div className="main">
         <DropdownButton
           optionSelected={demographicDataType}
           options={options}
