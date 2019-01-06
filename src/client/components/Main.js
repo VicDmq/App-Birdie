@@ -79,7 +79,7 @@ class Main extends React.Component {
     const { datas, demographicDataType } = this.props;
 
     const lineNotDisplayedComponent = (
-      <div class="lineNotDisplayed-container">
+      <div className="lineNotDisplayed-container">
         {nbLinesNotDisplayed
           ? nbLinesNotDisplayed + " lines has not been displayed"
           : ""}

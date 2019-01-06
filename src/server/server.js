@@ -1,13 +1,13 @@
-import express from "express";
 import { Server } from "http";
 import socket from "socket.io";
+import {app} from "./app";
 import { queryDatabase } from "./database";
 import {
   formatResultAccordingToLimit,
   additionalLinesShouldBeGroupedTogether
 } from "./resultFormatting";
 
-const app = express();
+
 const server = Server(app);
 const io = socket(server);
 
