@@ -19,7 +19,7 @@ const mapStateToProps = state => ({
 
 class Main extends React.Component {
   state = {
-    socket: socketIOClient("https://app-birdie-victor-domecq.herokuapp.com/:17873"),
+    socket: socketIOClient("https://app-birdie-victor-domecq.herokuapp.com:17873"),
     options: ["Education", "Hispanice", "Mace", "ooo"],
     head: ["#", "", "Count", "Average Age"],
     limit: 10,
