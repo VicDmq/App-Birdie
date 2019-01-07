@@ -1,8 +1,8 @@
 import server from "./server";
 import { appConfig } from "../../server.config";
 
-server.listen(appConfig.server.port, function() {
-  console.log(
-    "Server launched successfully : listening on " + appConfig.server.port
-  );
+const PORT = process.env.PORT || appConfig.server.port;
+
+server.listen(PORT, function() {
+  console.log("Server launched successfully : listening on " + PORT);
 });
