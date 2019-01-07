@@ -9,3 +9,5 @@ server.listen(PORT, function() {
     "Server launched successfully : listening on " + PORT + " " + server_host
   );
 });
+
+module.exports = {PORT};
