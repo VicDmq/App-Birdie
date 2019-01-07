@@ -9,8 +9,8 @@ const appConfig = {
       database: "birdietest",
       connectionTimeout: 5000
     },
-    port: 8080
+    port: env.process.PORT || 8080
   }
 };
 
-module.exports = {appConfig};
+module.exports = { appConfig };

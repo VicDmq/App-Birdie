@@ -1,7 +1,7 @@
 import server from "./server";
 import { appConfig } from "../../server.config";
 
-const PORT = process.env.PORT || appConfig.server.port;
+const PORT = appConfig.server.port;
 var server_host = process.env.HOST || "0.0.0.0";
 
 server.listen(PORT, function() {
@@ -10,4 +10,4 @@ server.listen(PORT, function() {
   );
 });
 
-module.exports = {PORT};
+//module.exports = { PORT };

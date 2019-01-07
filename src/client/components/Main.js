@@ -11,7 +11,7 @@ import "../style/app.css";
 
 // const serverPort = process.env.PORT || appConfig.server.port;
 // console.log(serverPort);
-import { PORT } from "../../server/index";
+import { appConfig } from "../../../server.config";
 
 const mapStateToProps = state => ({
   datas: state.datas,
@@ -20,7 +20,7 @@ const mapStateToProps = state => ({
 
 class Main extends React.Component {
   state = {
-    socket: socketIOClient("http://0.0.0.0:" + PORT),
+    socket: socketIOClient("http://0.0.0.0:" + appConfig.server.port),
     options: ["Education", "Hispanice", "Mace", "ooo"],
     head: ["#", "", "Count", "Average Age"],
     limit: 10,
