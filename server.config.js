@@ -9,7 +9,7 @@ const appConfig = {
       database: "birdietest",
       connectionTimeout: 5000
     },
-    port: env.process.PORT || 8080
+    port: process.env.PORT || 8080
   }
 };
 
