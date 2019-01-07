@@ -20,7 +20,7 @@ const mapStateToProps = state => ({
 
 class Main extends React.Component {
   state = {
-    socket: socketIOClient("http://0.0.0.0:" + appConfig.server.port),
+    socket: socketIOClient("/"),
     options: ["Education", "Hispanice", "Mace", "ooo"],
     head: ["#", "", "Count", "Average Age"],
     limit: 10,
