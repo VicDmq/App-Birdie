@@ -1,3 +1,5 @@
+const defaultPort = 8080;
+
 const appConfig = {
   server: {
     poolConfig: {
@@ -9,7 +11,10 @@ const appConfig = {
       database: "birdietest",
       connectionTimeout: 5000
     },
-    port: process.env.PORT || 8080
+    port: process.env.PORT || defaultPort
+  },
+  socket: {
+    url: process.env.NODE_ENV === "production" ? "/" : "http://localhost:" + defaultPort
   }
 };
 

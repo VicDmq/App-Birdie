@@ -5,14 +5,16 @@
   "main": "src/server/index.js",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "npm run build && babel-node src/server/index.js",
+    "start": "npm run build && set NODE_ENV=production&& babel-node src/server/index.js",
     "client": "webpack-dev-server --open --mode development --hot",
     "server": "nodemon --exec babel-node src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "mocha --require @babel/polyfill --require @babel/register"
   },
-  "author": "Victor Domecq",
-  "license": "ISC",
+  "engines": {
+    "node": "11.5.0",
+    "npm": "6.4.1"
+  },
   "dependencies": {
     "express": "^4.16.4",
     "mysql": "^2.16.0",
@@ -23,7 +25,6 @@
     "redux": "^4.0.1",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
-
     "@babel/core": "^7.1.0",
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
@@ -33,14 +34,18 @@
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^1.0.0",
-    "concurrently": "^4.1.0",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.5.0",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.9",
     "webpack": "^4.19.1",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.8"
-  }
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9"
+  },
+  "author": "Victor Domecq",
+  "license": "ISC"
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import { connect } from "react-redux";
+import { appConfig } from "../../../config";
 import { actionCreators } from "../appRedux";
 import { formatResultBeforeStoring } from "../resultFormatting";
 import DropdownButton from "./DropdownButton";
@@ -9,18 +10,11 @@ import ErrorComponent from "./ErrorComponent";
 import Loader from "react-loader-spinner";
 import "../style/app.css";
 
-// const serverPort = process.env.PORT || appConfig.server.port;
-// console.log(serverPort);
-import { appConfig } from "../../../server.config";
-
-const mapStateToProps = state => ({
-  datas: state.datas,
-  demographicDataType: state.demographicDataType
-});
+console.log(appConfig.socket.url);
 
 class Main extends React.Component {
   state = {
-    socket: socketIOClient("/"),
+    socket: socketIOClient(appConfig.socket.url),
     options: ["Education", "Hispanice", "Mace", "ooo"],
     head: ["#", "", "Count", "Average Age"],
     limit: 10,
@@ -123,5 +117,10 @@ class Main extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  datas: state.datas,
+  demographicDataType: state.demographicDataType
+});
 
 export default connect(mapStateToProps)(Main);
