@@ -46,7 +46,7 @@
     "nodemon": "^1.18.9",
     "webpack": "^4.19.1",
     "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.1.8",
+    "webpack-dev-server": "^3.1.8"
   },
   "author": "Victor Domecq",
   "license": "ISC"
