@@ -9,8 +9,8 @@ import ErrorComponent from "./ErrorComponent";
 import Loader from "react-loader-spinner";
 import "../style/app.css";
 
-const serverPort = process.env.PORT || appConfig.server.port;
-console.log(serverPort);
+// const serverPort = process.env.PORT || appConfig.server.port;
+// console.log(serverPort);
 
 const mapStateToProps = state => ({
   datas: state.datas,
@@ -19,7 +19,7 @@ const mapStateToProps = state => ({
 
 class Main extends React.Component {
   state = {
-    socket: socketIOClient("" || "http://localhost:8080"),
+    socket: socketIOClient("https://app-birdie-victor-domecq.herokuapp.com/:17873"),
     options: ["Education", "Hispanice", "Mace", "ooo"],
     head: ["#", "", "Count", "Average Age"],
     limit: 10,
